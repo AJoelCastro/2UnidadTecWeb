@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <title>.::SISTEMA DE VENTAS - ABC::.</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initialscale=1.0" name="viewport" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="{% static 'login/css/login.css' %}" />
+    <link rel="stylesheet" href="{% static 'login/css/style.css' %}" />
+  </head>
+  <body class="login">
+    {% load crispy_forms_tags %}
+
+    <div class="logo">
+      <img
+        src="{% static 'login/img/visa.png' %}"
+        alt="Sistema de Ventas & ABC"
+      />
+      <p>Sistema de Ventas & ABC</p>
+    </div>
+
+    <div class="content">
+      <form method="POST" action="">
+        {% csrf_token %}
+        <h4 class="form-title">Inicio de Sesión</h4>
+
+        <div class="form-group">
+          {{ form.username | as_crispy_field }} 
+        </div>
+
+        <div class="form-group">{{ form.password | as_crispy_field }}</div>
+
+        <hr />
+        <button class="btn btn-success btn-block">Ingresar</button>
+        <hr />
+      </form>
+    </div>
+
+    <div class="copyright">2020 &copy; Sistema de Ventas & ABC.</div>
+
+    <script
+      src="https://code.jquery.com/jquery3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

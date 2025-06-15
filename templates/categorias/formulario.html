@@ -1,0 +1,17 @@
+<!-- templates/categorias/formulario.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Categoría</title>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Categoría</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+        <a href="{% url 'lista_categorias' %}">Cancelar</a>
+    </form>
+</body>
+</html>
