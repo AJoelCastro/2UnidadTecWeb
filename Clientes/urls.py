@@ -1,7 +1,6 @@
-from django.contrib import admin
-from django.urls import path,include
-from seguridadApp.views import acceder
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('/', admin.site.urls),
+    path('', views.cliente_list, name='cliente_list'),
 ]

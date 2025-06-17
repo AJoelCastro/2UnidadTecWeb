@@ -1,6 +1,6 @@
 from django.shortcuts import render
+from .models import Categoria
 
-# Create your views here.
-# views.py
-from django.shortcuts import render, redirect, get_object_or_404
-
+def categoria_list(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'categoria/lista.html', {'categorias': categorias})
