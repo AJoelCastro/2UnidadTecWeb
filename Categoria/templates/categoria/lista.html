@@ -1,17 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Categorías</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de Categorías</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Lista de Categorías</h1>
-    <ul>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- NAVBAR -->
+  <nav class="bg-sky-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/home" class="text-2xl font-bold text-blue-600">MiApp</a>
+      <div>
+        <a href="/admin/" class="text-sm text-gray-700 hover:text-blue-600 transition">Panel de Administración</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex flex-col items-center justify-start py-10 px-4">
+    <div class="bg-white shadow-lg rounded-xl p-6 w-full max-w-2xl">
+      <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Lista de Categorías</h1>
+      <ul class="space-y-3">
         {% for categoria in categorias %}
-            <li>{{ categoria.nombre }} - {% if categoria.estado %}Activo{% else %}Inactivo{% endif %}</li>
+          <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100">
+            <span class="text-lg font-medium">{{ categoria.descripcion }}</span>
+            <span class="{% if categoria.estado %}text-green-600{% else %}text-red-600{% endif %} font-semibold">
+              {% if categoria.estado %}Activo{% else %}Inactivo{% endif %}
+            </span>
+          </li>
         {% endfor %}
-    </ul>
-    <a href="/admin/">Ir al panel de administración</a>
+      </ul>
+      <div class="mt-8 text-center">
+        <a href="/admin/" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-200">
+          Ir al panel de administración
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white mt-16 shadow-inner">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      © {{ now|date:"Y" }} MiApp — Todos los derechos reservados.
+    </div>
+  </footer>
+
 </body>
 </html>
+

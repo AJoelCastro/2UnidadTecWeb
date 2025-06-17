@@ -1,17 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Lista de Productos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Lista de Productos</h1>
-    <ul>
-        {% for producto in productos %}
-            <li>{{ producto.nombre }} - {{ producto.precio }} - {{ producto.stock }} - {% if producto.estado %}Activo{% else %}Inactivo{% endif %}</li>
-        {% endfor %}
-    </ul>
-    <a href="/admin/">Ir al panel de administración</a>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="bg-sky-50 shadow-md py-4 px-6 flex justify-between items-center">
+        <h1 class="text-2xl font-semibold text-gray-800">Gestión de Productos</h1>
+        <div class="space-x-2">
+            <a href="/home" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">🏠 Inicio</a>
+            <a href="/admin/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">Panel de Administración</a>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main class="flex-grow p-6 max-w-6xl mx-auto w-full">
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Lista de Productos</h2>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th class="px-4 py-2 text-left">ID</th>
+                            <th class="px-4 py-2 text-left">Descripción</th>
+                            <th class="px-4 py-2 text-left">Categoría</th>
+                            <th class="px-4 py-2 text-left">Precio</th>
+                            <th class="px-4 py-2 text-left">Stock</th>
+                            <th class="px-4 py-2 text-left">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-800">
+                        {% for producto in productos %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ producto.idProduct }}</td>
+                            <td class="px-4 py-2">{{ producto.description }}</td>
+                            <td class="px-4 py-2">{{ producto.idCategoria.descripcion }}</td>
+                            <td class="px-4 py-2">S/ {{ producto.price|floatformat:2 }}</td>
+                            <td class="px-4 py-2">{{ producto.stock }}</td>
+                            <td class="px-4 py-2">
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                    {% if producto.status %} bg-green-100 text-green-700 {% else %} bg-red-100 text-red-700 {% endif %}">
+                                    {% if producto.status %}Activo{% else %}Inactivo{% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-gray-500">No hay productos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white shadow-md py-4 text-center text-sm text-gray-500">
+        &copy; {{ now|date:"Y" }} Sistema de Ventas. Todos los derechos reservados.
+    </footer>
 </body>
 </html>
