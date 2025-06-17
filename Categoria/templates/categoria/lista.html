@@ -9,14 +9,17 @@
 <body class="bg-gray-100 text-gray-800">
 
   <!-- NAVBAR -->
-  <nav class="bg-sky-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="/home" class="text-2xl font-bold text-blue-600">MiApp</a>
-      <div>
-        <a href="/admin/" class="text-sm text-gray-700 hover:text-blue-600 transition">Panel de Administración</a>
-      </div>
+  <nav class="bg-sky-50 shadow-md py-4 px-8 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold text-gray-800">Gestion de Categorias</h1>
+    <div class="space-x-2">
+        <a href="/home" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">
+            🏠 Inicio
+        </a>
+        <a href="/admin/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+            Panel de Administración
+        </a>
     </div>
-  </nav>
+</nav>
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="flex flex-col items-center justify-start py-10 px-4">
@@ -32,11 +35,7 @@
           </li>
         {% endfor %}
       </ul>
-      <div class="mt-8 text-center">
-        <a href="/admin/" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-200">
-          Ir al panel de administración
-        </a>
-      </div>
+      
     </div>
   </main>
 
