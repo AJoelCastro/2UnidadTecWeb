@@ -1,0 +1,30 @@
+{% extends "plantilla.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ action }} Categoría{% endblock %}
+{% block page_title %}{{ action }} Categoría{% endblock %}
+{% block breadcrumb %}<a href="{% url 'categoria_list' %}">Categorías</a> / {{ action }}{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ action }} Categoría</h3>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        {{ form|crispy }}
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{% url 'categoria_list' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
