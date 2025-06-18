@@ -1,9 +1,9 @@
 {% extends "plantilla.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %}{{ action }} Clientes{% endblock %}
-{% block page_title %}{{ action }} Clientes{% endblock %}
-{% block breadcrumb %}<a href="{% url 'cliente_list' %}">Clientes</a> / {{ action }}{% endblock %}
+{% block title %}{{ action }} Cliente{% endblock %}
+{% block page_title %}{{ action }} Cliente{% endblock %}
+{% block breadcrumb %}<a href="{% url 'cliente_list' %}">Cliente</a> / {{ action }}{% endblock %}
 
 {% block contenido %}
 <div class="container-fluid">
@@ -11,7 +11,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">{{ action }} Clientes</h3>
+                    <h3 class="card-title">{{ action }} Cliente</h3>
                 </div>
                 <form method="post">
                     {% csrf_token %}
