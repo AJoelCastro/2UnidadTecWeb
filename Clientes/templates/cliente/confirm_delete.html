@@ -1,8 +1,8 @@
 {% extends "plantilla.html" %}
 
-{% block title %}Eliminar Categoría{% endblock %}
-{% block page_title %}Eliminar Categoría{% endblock %}
-{% block breadcrumb %}<a href="{% url 'categoria_list' %}">Categorías</a> / Eliminar{% endblock %}
+{% block title %}Eliminar Cliente{% endblock %}
+{% block page_title %}Eliminar Cliente{% endblock %}
+{% block breadcrumb %}<a href="{% url 'cliente_list' %}">Clientes</a> / Eliminar{% endblock %}
 
 {% block contenido %}
 <div class="container-fluid">
@@ -13,14 +13,14 @@
                     <h3 class="card-title">Confirmar eliminación</h3>
                 </div>
                 <div class="card-body">
-                    <p>¿Está seguro que desea eliminar la categoría "{{ categoria.descripcion }}"?</p>
+                    <p>¿Está seguro que desea eliminar al cliente "{{ cliente.descripcion }}"?</p>
                     <p class="text-danger">Esta acción no se puede deshacer.</p>
                 </div>
                 <div class="card-footer">
                     <form method="post">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Sí, eliminar</button>
-                        <a href="{% url 'categoria_list' %}" class="btn btn-secondary">Cancelar</a>
+                        <a href="{% url 'cliente_list' %}" class="btn btn-secondary">Cancelar</a>
                     </form>
                 </div>
             </div>
