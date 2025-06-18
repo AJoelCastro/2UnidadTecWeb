@@ -27,5 +27,6 @@ def homePage(request):
 
 def salir(request):
     messages.info(request, "Saliste exitosamente")
-def logout(request):
+def logOut(request):
+    logout(request)
     return redirect("login")
