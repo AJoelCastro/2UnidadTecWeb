@@ -29,34 +29,22 @@
             <li class="nav-item d-none d-sm-inline-block">
                 <a href="{% url 'home' %}" class="nav-link">Inicio</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Contacto</a>
-            </li>
         </ul>
     </nav>
 
     <!-- SIDEBAR -->
     <aside class="main-sidebar elevation-4  text-gray-800">
         <!-- Logo -->
-        <a href="{% url 'home' %}" class="brand-link bg-sky-50">
+        <a href="{% url 'home' %}" class="brand-link">
             <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="Logo" class="brand-image img-circle elevation-3">
             <span class="brand-text font-weight-light">Sistema de Ventas</span>
         </a>
 
         <!-- Sidebar -->
         <div class="sidebar">
-            <!-- Usuario -->
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2DDTRrUCnNmIEQSLwNV4CGo7Oq_hYe-o0UA&s" class="img-circle elevation-2" alt="Usuario">
-                </div>
-                <div class="info">
-                    <a href="#" class="d-block">ARANDA SICCHA</a>
-                </div>
-            </div>
-
+           
             <!-- Buscador -->
-            <div class="form-inline">
+            <div class="form-inline mt-3">
                 <div class="input-group" data-widget="sidebar-search">
                     <input class="form-control form-control-sidebar" type="search" placeholder="Buscar" aria-label="Buscar">
                     <div class="input-group-append">
@@ -87,8 +75,7 @@
                         </a>
                     </li>
                     <li class="nav-item mt-3">
-                        <a href="{% url 'logout' %}" class="nav-link bg-red-600 text-white rounded hover:bg-red-700">
-                            <i class="nav-icon fas fa-power-off"></i>
+                        <a href="{% url 'logout' %}" class="flex nav-link bg-red-600 text-white rounded hover:bg-red-700 justify-center items-center">
                             <p>Cerrar sesión</p>
                         </a>
                     </li>
