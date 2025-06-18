@@ -1,77 +1,73 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Clientes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- NAVBAR -->
-    <nav class="bg-sky-50 shadow-md py-4 px-8 flex justify-between items-center">
-        <h1 class="text-2xl font-semibold text-gray-800">Gestión de Clientes</h1>
-        <div class="space-x-2">
-            <a href="/home" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">
-                🏠 Inicio
-            </a>
-            <a href="/admin/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
-                Panel de Administración
-            </a>
-        </div>
-    </nav>
+{% extends "plantilla.html" %}
 
-    <!-- CONTENIDO -->
-    <main class="flex-grow p-6 max-w-6xl mx-auto w-full">
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Lista de Clientes</h2>
+{% block title %}Clientes{% endblock %}
+{% block page_title %}Gestión de Clientes{% endblock %}
+{% block breadcrumb %}Clientes{% endblock %}
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-100 text-gray-700">
-                        <tr>
-                            <th class="px-4 py-2 text-left">ID</th>
-                            <th class="px-4 py-2 text-left">Nombres</th>
-                            <th class="px-4 py-2 text-left">Apellidos</th>
-                            <th class="px-4 py-2 text-left">Dirección</th>
-                            <th class="px-4 py-2 text-left">Sexo</th>
-                            <th class="px-4 py-2 text-left">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-gray-800">
-                        {% for cliente in clientes %}
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ cliente.idCliente }}</td>
-                            <td class="px-4 py-2">{{ cliente.nombres }}</td>
-                            <td class="px-4 py-2">{{ cliente.apellidos }}</td>
-                            <td class="px-4 py-2">{{ cliente.direccion }}</td>
-                            <td class="px-4 py-2">
-                                {% if cliente.sexo == "M" %}
-                                    Masculino
-                                {% else %}
-                                    Femenino
-                                {% endif %}
-                            </td>
-                            <td class="px-4 py-2">
-                                <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                    {% if cliente.estado %} bg-green-100 text-green-700 {% else %} bg-red-100 text-red-700 {% endif %}">
-                                    {% if cliente.estado %}Activo{% else %}Inactivo{% endif %}
-                                </span>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-gray-500">No hay clientes registrados.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+{% block contenido %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Clientes</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'cliente_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Nuevo Cliente
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Dirección</th>
+                                <th>Sexo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in clientes %}
+                            <tr>
+                                <td>{{ cliente.idCliente }}</td>
+                                <td>{{ cliente.nombres }}</td>
+                                <td>{{ cliente.apellidos }}</td>
+                                <td>{{ cliente.direccion }}</td>
+                                <td>
+                                    {% if cliente.sexo == "M" %}
+                                        Masculino
+                                    {% else %}
+                                        Femenino
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge {% if cliente.estado %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if cliente.estado %}Activo{% else %}Inactivo{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'cliente_update' cliente.id %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'cliente_delete' cliente.id %}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">No hay clientes registrados</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-white shadow-md py-4 text-center text-sm text-gray-500">
-        &copy; {{ now|date:"Y" }} Sistema de Ventas. Todos los derechos reservados.
-    </footer>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}

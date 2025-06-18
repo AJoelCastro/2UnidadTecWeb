@@ -1,51 +1,62 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lista de Categorías</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800">
+{% extends "plantilla.html" %}
 
-  <!-- NAVBAR -->
-  <nav class="bg-sky-50 shadow-md py-4 px-8 flex justify-between items-center">
-    <h1 class="text-2xl font-semibold text-gray-800">Gestion de Categorias</h1>
-    <div class="space-x-2">
-        <a href="/home" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">
-            🏠 Inicio
-        </a>
-        <a href="/admin/" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
-            Panel de Administración
-        </a>
+{% block title %}Categorías{% endblock %}
+{% block page_title %}Gestión de Categorías{% endblock %}
+{% block breadcrumb %}Categorías{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Categorías</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'categoria_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Nueva Categoría
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for categoria in categorias %}
+                            <tr>
+                                <td>{{ categoria.idCategoria }}</td>
+                                <td>{{ categoria.descripcion }}</td>
+                                <td>
+                                    <span class="badge {% if categoria.estado %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if categoria.estado %}Activo{% else %}Inactivo{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'categoria_update' categoria.id %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'categoria_delete' categoria.id %}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay categorías registradas</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</nav>
-
-  <!-- CONTENIDO PRINCIPAL -->
-  <main class="flex flex-col items-center justify-start py-10 px-4">
-    <div class="bg-white shadow-lg rounded-xl p-6 w-full max-w-2xl">
-      <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Lista de Categorías</h1>
-      <ul class="space-y-3">
-        {% for categoria in categorias %}
-          <li class="flex justify-between items-center p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100">
-            <span class="text-lg font-medium">{{ categoria.descripcion }}</span>
-            <span class="{% if categoria.estado %}text-green-600{% else %}text-red-600{% endif %} font-semibold">
-              {% if categoria.estado %}Activo{% else %}Inactivo{% endif %}
-            </span>
-          </li>
-        {% endfor %}
-      </ul>
-      
-    </div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="bg-white mt-16 shadow-inner">
-    <div class="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-      © {{ now|date:"Y" }} MiApp — Todos los derechos reservados.
-    </div>
-  </footer>
-
-</body>
-</html>
+</div>
+{% endblock %}
 
