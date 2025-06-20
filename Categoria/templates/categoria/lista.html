@@ -30,7 +30,7 @@
                         <tbody>
                             {% for categoria in categorias %}
                             <tr>
-                                <td>{{ categoria.idCategoria }}</td>
+                                <td>{{ categoria.id }}</td>
                                 <td>{{ categoria.descripcion }}</td>
                                 <td>
                                     <span class="badge {% if categoria.estado %}badge-success{% else %}badge-danger{% endif %}">

@@ -6,7 +6,6 @@ class Cliente(models.Model):
         ('M', 'Masculino'),
         ('F', 'Femenino'),
     ]
-    idCliente=models.PositiveIntegerField(unique=True) 
     apellidos=models.CharField(max_length=80)
     nombres=models.CharField(max_length=80) 
     direccion=models.CharField(max_length=100) 
