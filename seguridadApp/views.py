@@ -16,6 +16,7 @@ def acceder(request):
             if usuario is not None:
                 login(request, usuario)
                 return redirect("home")
+                
     else:
         form = AuthenticationForm()
         
