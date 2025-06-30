@@ -63,3 +63,11 @@ celerybeat-schedule
 
 # Other
 *.orig
+# Ignorar archivos compilados de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignorar migraciones compiladas
+*/migrations/__pycache__/
+*.cpython-*.pyc

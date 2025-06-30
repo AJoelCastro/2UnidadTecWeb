@@ -9,9 +9,9 @@ class Tipo(models.Model):
         return self.descripcion
     
 class Parametro(models.Model):
-    tipo_id = models.IntegerField(primary_key=True, verbose_name='Tipo ID')
+    tipo = models.ForeignKey(Tipo, on_delete=models.CASCADE)
     numeracion = models.CharField(max_length=15)
     serie = models.CharField(max_length=3)
 
     def __str__(self):
-        return f"{self.tipo_id} - {self.serie}{self.numeracion}"    
+        return self.numeracion   

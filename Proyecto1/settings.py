@@ -43,12 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'seguridadApp',
-    'gestionVentas',
     'crispy_forms',
     'crispy_bootstrap4',
     'Categoria',
     'Clientes',
     'Productos',
+    'core',
+    'gestionVentas',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crud',
         'USER':'root',
-        'PASSWORD':'',
+        'PASSWORD':'Cnic2024#kiki',
         'HOST':'localhost',
         'PORT':'3306'
     }
