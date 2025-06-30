@@ -23,10 +23,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombres</th>
-                                <th>Apellidos</th>
+                                <th>RUC/DNI</th>
+                                <th>Email</th>
                                 <th>Dirección</th>
-                                <th>Sexo</th>
-                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -35,20 +34,9 @@
                             <tr>
                                 <td>{{ cliente.id }}</td>
                                 <td>{{ cliente.nombres }}</td>
-                                <td>{{ cliente.apellidos }}</td>
+                                <td>{{ cliente.ruc_dni }}</td>
+                                <td>{{ cliente.email }}</td>
                                 <td>{{ cliente.direccion }}</td>
-                                <td>
-                                    {% if cliente.sexo == "M" %}
-                                        Masculino
-                                    {% else %}
-                                        Femenino
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge {% if cliente.estado %}badge-success{% else %}badge-danger{% endif %}">
-                                        {% if cliente.estado %}Activo{% else %}Inactivo{% endif %}
-                                    </span>
-                                </td>
                                 <td>
                                     <a href="{% url 'cliente_update' cliente.id %}" class="btn btn-info btn-sm">
                                         <i class="fas fa-edit"></i>
