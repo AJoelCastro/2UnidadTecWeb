@@ -5,7 +5,6 @@ from core.models import Tipo
 from django.utils import timezone
 # Create your models here.
 class CabeceraVenta(models.Model):
-    venta_id     = models.AutoField(primary_key=True)
     cliente      = models.ForeignKey(Cliente, on_delete=models.PROTECT)
     tipo         = models.ForeignKey(Tipo, on_delete=models.PROTECT)
     fecha_venta  = models.DateField(default=timezone.now)
