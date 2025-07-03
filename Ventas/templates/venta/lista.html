@@ -1,0 +1,76 @@
+{% extends "plantilla.html" %}
+
+{% block title %}Ventas{% endblock %}
+{% block page_title %}Gestión de Ventas{% endblock %}
+{% block breadcrumb %}Ventas{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Ventas</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'crear_venta' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Nueva Venta
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Tipo Doc.</th>
+                                <th>Nro. Doc.</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for venta in ventas %}
+                            <tr>
+                                <td>{{ venta.id }}</td>
+                                <td>{{ venta.idcliente.nombres }}</td>
+                                <td>{{ venta.fecha_venta }}</td>
+                                <td>{{ venta.idtipo.descripcion }}</td>
+                                <td>{{ venta.nrodoc }}</td>
+                                <td>{{ venta.total }}</td>
+                                <td>
+                                    {% if venta.estado %}
+                                    <span class="badge badge-success">Activo</span>
+                                    {% else %}
+                                    <span class="badge badge-danger">Anulado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'editar_venta' venta.id %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% if venta.estado %}
+                                    <a href="{% url 'eliminar_venta' venta.id %}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'generar_pdf' venta.id %}" class="btn btn-secondary btn-sm" target="_blank">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">No hay ventas registradas</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ venta.nrodoc }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .header p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .document-title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .customer-info {
+            margin-bottom: 20px;
+        }
+        .customer-info p {
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        .totals {
+            width: 300px;
+            float: right;
+        }
+        .totals table {
+            width: 100%;
+        }
+        .totals table td:first-child {
+            text-align: right;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ empresa }}</h1>
+        <p>{{ direccion }}</p>
+        <p>Tel: {{ telefono }} | Email: {{ email }}</p>
+    </div>
+    
+    <div class="document-title">
+        {% if venta.idtipo.descripcion == 'BOLETA' %}
+        BOLETA DE VENTA ELECTRÓNICA
+        {% else %}
+        FACTURA ELECTRÓNICA
+        {% endif %}
+        <br>
+        {{ venta.nrodoc }}
+    </div>
+    
+    <div class="customer-info">
+        <p><strong>Cliente:</strong> {{ venta.idcliente.nombres }}</p>
+        <p><strong>{% if venta.idtipo.descripcion == 'FACTURA' %}RUC{% else %}DNI{% endif %}:</strong> {{ venta.idcliente.ruc_dni }}</p>
+        <p><strong>Dirección:</strong> {{ venta.idcliente.direccion }}</p>
+        <p><strong>Fecha:</strong> {{ venta.fecha_venta }}</p>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in detalles %}
+            <tr>
+                <td>{{ detalle.idproducto.description }}</td>
+                <td>{{ detalle.precio }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>{{ detalle.precio|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="totals">
+        <table>
+            <tr>
+                <td>Subtotal:</td>
+                <td>{{ venta.subtotal|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>IGV (18%):</td>
+                <td>{{ venta.igv|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Total:</td>
+                <td>{{ venta.total|floatformat:2 }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <p>Este documento es una representación impresa de un {{ venta.idtipo.descripcion }} electrónica.</p>
+        <p>Consulte la validez del documento en www.sunat.gob.pe</p>
+    </div>
+</body>
+</html>

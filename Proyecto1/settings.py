@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'Categoria',
     'Clientes',
     'Productos',
-    'Unidad',
     'Ventas'
 ]
 

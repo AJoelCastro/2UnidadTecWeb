@@ -1,0 +1,35 @@
+{% extends "plantilla.html" %}
+
+{% block title %}Anular Venta{% endblock %}
+{% block page_title %}Anular Venta{% endblock %}
+{% block breadcrumb %}<a href="{% url 'listar_venta' %}">Ventas</a> / Anular{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger">
+                    <h3 class="card-title">Confirmar Anulación</h3>
+                </div>
+                <div class="card-body">
+                    <p>¿Está seguro que desea anular la venta <strong>{{ venta.nrodoc }}</strong> del cliente <strong>{{ venta.idcliente.nombres }}</strong>?</p>
+                    <p>Esta acción no se puede deshacer y devolverá el stock de los productos.</p>
+                    
+                    <div class="alert alert-warning">
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> Advertencia</h5>
+                        La venta quedará marcada como anulada y no podrá ser modificada posteriormente.
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Confirmar Anulación</button>
+                        <a href="{% url 'listar_venta' %}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

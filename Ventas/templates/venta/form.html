@@ -1,0 +1,228 @@
+{% extends "plantilla.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ action }} Venta{% endblock %}
+{% block page_title %}{{ action }} Venta{% endblock %}
+{% block breadcrumb %}<a href="{% url 'listar_venta' %}">Ventas</a> / {{ action }}{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ action }} Venta</h3>
+                </div>
+                <form method="post" id="ventaForm">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.idcliente|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.fecha_venta|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.idtipo|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.nrodoc|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h4>Detalle de Productos</h4>
+                        
+                        <div id="detalles">
+                            {{ formset.management_form }}
+                            <table class="table table-bordered" id="detalleTable">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
+                                        <th>Subtotal</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for form in formset %}
+                                    <tr class="detalle-form">
+                                        <td>
+                                            {{ form.id }}
+                                            {{ form.idproducto }}
+                                            {% if form.idproducto.errors %}
+                                            <div class="text-danger">{{ form.idproducto.errors }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ form.precio }}
+                                            {% if form.precio.errors %}
+                                            <div class="text-danger">{{ form.precio.errors }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ form.cantidad }}
+                                            {% if form.cantidad.errors %}
+                                            <div class="text-danger">{{ form.cantidad.errors }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="subtotal">0.00</span>
+                                        </td>
+                                        <td>
+                                            {% if formset.can_delete %}
+                                            <button type="button" class="btn btn-danger btn-sm remove-form">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            {{ form.DELETE }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <button type="button" id="add-form" class="btn btn-success btn-sm">
+                                <i class="fas fa-plus"></i> Agregar Producto
+                            </button>
+                        </div>
+                        
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{ form.subtotal|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.igv|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.total|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{% url 'listar_venta' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        // Función para calcular subtotales y totales
+        function calcularTotales() {
+            let subtotal = 0;
+            $('.detalle-form').each(function() {
+                const precio = parseFloat($(this).find('.precio').val()) || 0;
+                const cantidad = parseFloat($(this).find('.cantidad').val()) || 0;
+                const lineaSubtotal = precio * cantidad;
+                $(this).find('.subtotal').text(lineaSubtotal.toFixed(2));
+                subtotal += lineaSubtotal;
+            });
+            
+            const igv = subtotal * 0.18; // 18% IGV
+            const total = subtotal + igv;
+            
+            $('#id_subtotal').val(subtotal.toFixed(2));
+            $('#id_igv').val(igv.toFixed(2));
+            $('#id_total').val(total.toFixed(2));
+        }
+        
+        // Función para actualizar el formato del número de documento según el tipo
+        $('#id_tipo_documento').change(function() {
+            const tipoId = $(this).val();
+            if (tipoId) {
+                // Hacer una petición AJAX para obtener la serie del tipo seleccionado
+                $.ajax({
+                    url: '/ventas/api/serie-info/',
+                    data: {
+                        'tipo_id': tipoId
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.serie) {
+                            // Actualizar el campo de número de documento (solo visual)
+                            $('#id_nrodoc').attr('placeholder', data.serie + '-00000000');
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Disparar el evento change al cargar la página para inicializar el placeholder
+        $('#id_tipo_documento').trigger('change');
+        
+        // Evento al cambiar producto
+        $(document).on('change', '.select-producto', function() {
+            const productoId = $(this).val();
+            const row = $(this).closest('tr');
+            
+            if (productoId) {
+                $.ajax({
+                    url: '{% url "get_producto_info" %}',
+                    data: {
+                        'producto_id': productoId
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        row.find('.precio').val(data.precio);
+                        calcularTotales();
+                    }
+                });
+            } else {
+                row.find('.precio').val('');
+                calcularTotales();
+            }
+        });
+        
+        // Evento al cambiar cantidad
+        $(document).on('change', '.cantidad', function() {
+            calcularTotales();
+        });
+        
+        // Agregar nueva fila
+        $('#add-form').click(function() {
+            const formCount = parseInt($('#id_detalleventas_set-TOTAL_FORMS').val());
+            const row = $('.detalle-form:first').clone(true);
+            
+            // Actualizar IDs y nombres
+            row.find(':input').each(function() {
+                const name = $(this).attr('name');
+                if (name) {
+                    const newName = name.replace('-0-', '-' + formCount + '-');
+                    $(this).attr('name', newName);
+                    $(this).attr('id', 'id_' + newName);
+                }
+            });
+            
+            // Limpiar valores
+            row.find('select').val('');
+            row.find('input[type="number"]').val('');
+            row.find('.subtotal').text('0.00');
+            
+            // Agregar al final
+            $('#detalleTable tbody').append(row);
+            $('#id_detalleventas_set-TOTAL_FORMS').val(formCount + 1);
+        });
+        
+        // Eliminar fila
+        $(document).on('click', '.remove-form', function() {
+            const row = $(this).closest('tr');
+            row.find('input[type="checkbox"]').prop('checked', true);
+            row.hide();
+            calcularTotales();
+        });
+        
+        // Calcular totales al cargar
+        calcularTotales();
+    });
+</script>
+{% endblock %}
