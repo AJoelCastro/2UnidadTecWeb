@@ -4,6 +4,7 @@ from .utils import generate_pdf
 
 urlpatterns = [
     path('', views.listar_venta, name='listar_venta'),
+    path('dashboard/', views.dashboard, name='dashboard_ventas'),
     path('crear/', views.agregar_venta, name='crear_venta'),
     path('editar/<int:pk>/', views.editar_venta, name='editar_venta'),
     path('anular/<int:pk>/', views.anular_venta, name='eliminar_venta'),

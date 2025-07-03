@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.urls import reverse
 
 # Create your views here.
 
@@ -23,8 +24,7 @@ def acceder(request):
     return render(request, "login.html", {"form": form})
 
 def homePage(request):
-    context = {}
-    return render(request, "bienvenido.html", context)
+    return redirect(reverse('dashboard_ventas'))
 
 def salir(request):
     messages.info(request, "Saliste exitosamente")

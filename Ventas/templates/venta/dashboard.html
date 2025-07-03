@@ -1,0 +1,347 @@
+{% extends "plantilla.html" %}
+
+{% block title %}Dashboard de Ventas{% endblock %}
+{% block page_title %}Dashboard de Ventas{% endblock %}
+{% block breadcrumb %}Dashboard{% endblock %}
+
+{% block contenido %}
+<div class="container-fluid">
+    <!-- Tarjetas de resumen -->
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ cantidad_ventas_mes }}</h3>
+                    <p>Ventas en {{ mes_actual }}</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <a href="{% url 'listar_venta' %}" class="small-box-footer">Ver ventas <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>S/ {{ total_ventas_mes|floatformat:2 }}</h3>
+                    <p>Ingresos en {{ mes_actual }}</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <a href="{% url 'listar_venta' %}" class="small-box-footer">Ver detalles <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ cantidad_ventas_historico }}</h3>
+                    <p>Ventas Totales</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <a href="{% url 'listar_venta' %}" class="small-box-footer">Ver historial <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>S/ {{ total_ventas_historico|floatformat:2 }}</h3>
+                    <p>Ingresos Totales</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <a href="{% url 'listar_venta' %}" class="small-box-footer">Ver detalles <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Gráficos -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ventas diarias - {{ mes_actual }} {{ año_actual }}</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="ventasDiariasChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Productos más vendidos - {{ mes_actual }}</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="productosVendidosChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ventas mensuales - {{ año_actual }}</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="ventasMensualesChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Alertas de stock -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h3 class="card-title">Productos con stock bajo</h3>
+                </div>
+                <div class="card-body table-responsive p-0" style="max-height: 300px; overflow-y: auto;">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_stock_bajo %}
+                            <tr>
+                                <td>{{ producto.id }}</td>
+                                <td>{{ producto.description }}</td>
+                                <td>{{ producto.idCategoria.descripcion }}</td>
+                                <td><span class="badge badge-warning">{{ producto.stock }}</span></td>
+                                <td>
+                                    <span class="badge {% if producto.status %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if producto.status %}Activo{% else %}Inactivo{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No hay productos con stock bajo</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger">
+                    <h3 class="card-title">Productos sin stock</h3>
+                </div>
+                <div class="card-body table-responsive p-0" style="max-height: 300px; overflow-y: auto;">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos_sin_stock %}
+                            <tr>
+                                <td>{{ producto.id }}</td>
+                                <td>{{ producto.description }}</td>
+                                <td>{{ producto.idCategoria.descripcion }}</td>
+                                <td><span class="badge badge-danger">{{ producto.stock }}</span></td>
+                                <td>
+                                    <span class="badge {% if producto.status %}badge-success{% else %}badge-danger{% endif %}">
+                                        {% if producto.status %}Activo{% else %}Inactivo{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No hay productos sin stock</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Datos para los gráficos
+    const dias = {{ dias|safe }};
+    const totales = {{ totales|safe }};
+    const cantidades = {{ cantidades|safe }};
+    const nombresProductos = {{ nombres_productos|safe }};
+    const cantidadesProductos = {{ cantidades_productos|safe }};
+    const meses = {{ meses|safe }};
+    const totalesPorMes = {{ totales_por_mes|safe }};
+    const cantidadesPorMes = {{ cantidades_por_mes|safe }};
+    
+    // Configuración de colores
+    const primaryColor = '#007bff';
+    const successColor = '#28a745';
+    const warningColor = '#ffc107';
+    const dangerColor = '#dc3545';
+    const infoColor = '#17a2b8';
+    
+    // Gráfico de ventas diarias
+    const ventasDiariasCtx = document.getElementById('ventasDiariasChart').getContext('2d');
+    new Chart(ventasDiariasCtx, {
+        type: 'bar',
+        data: {
+            labels: dias,
+            datasets: [
+                {
+                    label: 'Monto de ventas (S/)',
+                    data: totales,
+                    backgroundColor: primaryColor,
+                    borderColor: primaryColor,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Cantidad de ventas',
+                    data: cantidades,
+                    backgroundColor: successColor,
+                    borderColor: successColor,
+                    borderWidth: 1,
+                    type: 'line',
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Monto (S/)'
+                    }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cantidad'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Día del mes'
+                    }
+                }
+            }
+        }
+    });
+    
+    // Gráfico de productos más vendidos
+    const productosVendidosCtx = document.getElementById('productosVendidosChart').getContext('2d');
+    new Chart(productosVendidosCtx, {
+        type: 'pie',
+        data: {
+            labels: nombresProductos,
+            datasets: [{
+                data: cantidadesProductos,
+                backgroundColor: [primaryColor, successColor, warningColor, dangerColor, infoColor],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                title: {
+                    display: true,
+                    text: 'Productos más vendidos (por cantidad)'
+                }
+            }
+        }
+    });
+    
+    // Gráfico de ventas mensuales
+    const ventasMensualesCtx = document.getElementById('ventasMensualesChart').getContext('2d');
+    new Chart(ventasMensualesCtx, {
+        type: 'bar',
+        data: {
+            labels: meses,
+            datasets: [
+                {
+                    label: 'Monto de ventas (S/)',
+                    data: totalesPorMes,
+                    backgroundColor: primaryColor,
+                    borderColor: primaryColor,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Cantidad de ventas',
+                    data: cantidadesPorMes,
+                    backgroundColor: successColor,
+                    borderColor: successColor,
+                    borderWidth: 1,
+                    type: 'line',
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Monto (S/)'
+                    }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cantidad'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Mes'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
