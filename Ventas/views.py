@@ -177,9 +177,9 @@ def agregar_venta(request):
                     producto.save()
             
             messages.success(request, 'Venta registrada correctamente')
-            
+            form.clean()
             # Redirigir a la generación del PDF
-            return redirect('generar_pdf', venta_id=venta.id)
+            return redirect('listar_venta')
     else:
         form = VentaForm(initial={'fecha_venta': datetime.date.today()})
         formset = DetalleVentaFormSet()
