@@ -140,32 +140,6 @@ def agregar_venta(request):
         formset = DetalleVentaFormSet(request.POST)
         
         if form.is_valid() and formset.is_valid():
-            # Verificar stock disponible antes de procesar la venta
-            # stock_suficiente = True
-            # productos_sin_stock = []
-            
-            # for form in formset:
-            #     if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
-            #         producto = form.cleaned_data['idproducto']
-            #         cantidad = form.cleaned_data['cantidad']
-                    
-            #         # Verificar si el producto está activo y tiene stock suficiente
-            #         if not producto.status:
-            #             stock_suficiente = False
-            #             productos_sin_stock.append(f"{producto.description} (Inactivo)")
-            #         elif producto.stock < float(cantidad):
-            #             stock_suficiente = False
-            #             productos_sin_stock.append(f"{producto.description} (Stock: {producto.stock})")
-            
-            # if not stock_suficiente:
-            #     mensaje_error = 'No se puede completar la venta. Los siguientes productos no tienen stock suficiente: '
-            #     mensaje_error += ', '.join(productos_sin_stock)
-            #     messages.error(request, mensaje_error)
-            #     return render(request, 'venta/form.html', {
-            #         'form': form,
-            #         'formset': formset,
-            #         'action': 'Crear'
-            #     })
             
             # Guardar la cabecera
             venta = form.save(commit=False)

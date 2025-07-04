@@ -13,7 +13,7 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ action }} Venta</h3>
                 </div>
-                <form method="post" id="ventaForm">
+                <form method="post" id="ventaForm" onsubmit="return validarStock();">
                     {% csrf_token %}
                     <div class="card-body">
                         <div class="row">
@@ -52,12 +52,13 @@
                                     {% for form in formset %}
                                     <tr class="detalle-form">
                                         <td>
-                                            {{ form.id }}
-                                            {{ form.idproducto }}
-                                            {% if form.idproducto.errors %}
-                                            <div class="text-danger">{{ form.idproducto.errors }}</div>
-                                            {% endif %}
-                                        </td>
+                            {{ form.id }}
+                            {{ form.idproducto }}
+                            {% if form.idproducto.errors %}
+                            <div class="text-danger">{{ form.idproducto.errors }}</div>
+                            {% endif %}
+                            <div class="stock-info text-info mt-1" style="font-size: 0.85em;"></div>
+                        </td>
                                         <td>
                                             {{ form.precio }}
                                             {% if form.precio.errors %}
@@ -116,6 +117,43 @@
 
 {% block js %}
 <script>
+    // Función para validar stock antes de enviar el formulario
+    function validarStock() {
+        let stockSuficiente = true;
+        let productosSinStock = [];
+        
+        $('.detalle-form:visible').each(function() {
+            const productoSelect = $(this).find('.select-producto');
+            const productoNombre = productoSelect.find('option:selected').text();
+            const cantidad = parseFloat($(this).find('.cantidad').val()) || 0;
+            const stockInfo = $(this).find('.stock-info').text();
+            
+            // Solo validar si hay un producto seleccionado y una cantidad mayor a cero
+            if (productoSelect.val() && cantidad > 0) {
+                // Extraer el valor del stock del texto mostrado
+                const stockMatch = stockInfo.match(/Stock disponible:\s*(\d+(?:\.\d+)?)/);
+                if (stockMatch) {
+                    const stockDisponible = parseFloat(stockMatch[1]);
+                    
+                    // Verificar si hay stock suficiente
+                    if (cantidad > stockDisponible) {
+                        stockSuficiente = false;
+                        productosSinStock.push(`${productoNombre} (Stock: ${stockDisponible})`);
+                    }
+                }
+            }
+        });
+        
+        // Si no hay stock suficiente, mostrar mensaje y evitar envío del formulario
+        if (!stockSuficiente) {
+            const mensaje = 'No se puede realizar la venta. Los siguientes productos no tienen stock suficiente: ';
+            alert(mensaje + productosSinStock.join(', '));
+            return false;
+        }
+        
+        return true;
+    }
+    
     $(document).ready(function() {
         // Función para calcular subtotales y totales
         function calcularTotales() {
@@ -174,17 +212,49 @@
                     dataType: 'json',
                     success: function(data) {
                         row.find('.precio').val(data.precio);
+                        // Mostrar información del stock disponible
+                        row.find('.stock-info').html(`<strong>Stock disponible:</strong> ${data.stock}`);
+                        
+                        // Si el stock es bajo (menos de 5), mostrar en color naranja
+                        if (data.stock < 5 && data.stock > 0) {
+                            row.find('.stock-info').removeClass('text-info').addClass('text-warning');
+                        }
+                        // Si no hay stock, mostrar en rojo
+                        else if (data.stock <= 0) {
+                            row.find('.stock-info').removeClass('text-info').addClass('text-danger');
+                        }
+                        else {
+                            row.find('.stock-info').removeClass('text-warning text-danger').addClass('text-info');
+                        }
+                        
                         calcularTotales();
                     }
                 });
             } else {
                 row.find('.precio').val('');
+                row.find('.stock-info').html('');
                 calcularTotales();
             }
         });
         
         // Evento al cambiar cantidad
         $(document).on('change', '.cantidad', function() {
+            const row = $(this).closest('tr');
+            const cantidad = parseFloat($(this).val()) || 0;
+            const stockInfo = row.find('.stock-info').text();
+            
+            // Extraer el valor del stock del texto mostrado
+            const stockMatch = stockInfo.match(/Stock disponible:\s*(\d+(?:\.\d+)?)/);
+            if (stockMatch) {
+                const stockDisponible = parseFloat(stockMatch[1]);
+                
+                // Validar que la cantidad no exceda el stock disponible
+                if (cantidad > stockDisponible) {
+                    alert(`La cantidad ingresada (${cantidad}) excede el stock disponible (${stockDisponible})`);
+                    $(this).val(stockDisponible); // Establecer al máximo disponible
+                }
+            }
+            
             calcularTotales();
         });
         
@@ -207,6 +277,7 @@
             row.find('select').val('');
             row.find('input[type="number"]').val('');
             row.find('.subtotal').text('0.00');
+            row.find('.stock-info').html('').removeClass('text-warning text-danger').addClass('text-info');
             
             // Agregar al final
             $('#detalleTable tbody').append(row);
