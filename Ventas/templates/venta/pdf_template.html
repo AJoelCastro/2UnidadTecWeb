@@ -112,6 +112,7 @@
     
     <div class="totals">
         <table>
+            {% if venta.idtipo.descripcion == 'FACTURA' %}
             <tr>
                 <td>Subtotal:</td>
                 <td>{{ venta.subtotal|floatformat:2 }}</td>
@@ -120,10 +121,18 @@
                 <td>IGV (18%):</td>
                 <td>{{ venta.igv|floatformat:2 }}</td>
             </tr>
+            {% endif %}
+            {% if venta.idtipo.descripcion == 'FACTURA' %}
             <tr>
                 <td>Total:</td>
                 <td>{{ venta.total|floatformat:2 }}</td>
             </tr>
+            {% else %}
+            <tr>
+                <td>Total + IGV 18%:</td>
+                <td>{{ venta.total|floatformat:2 }}</td>
+            </tr>
+            {% endif %}
         </table>
     </div>
     
