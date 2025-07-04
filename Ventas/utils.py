@@ -26,8 +26,8 @@ def generate_pdf(request, venta_id):
         'venta': venta,
         'detalles': detalles,
         'empresa': 'SISTEMA DE VENTAS',
-        'direccion': 'Av. Principal 123, Ciudad',
-        'telefono': '(01) 123-4567',
+        'direccion': 'Av. Principal 123, TRUJILLO',
+        'telefono': '999 888 777',
         'email': 'info@sistemaventas.com',
     }
     

@@ -22,7 +22,6 @@ class Parametros(models.Model):
     serie = models.CharField(max_length=3)
     @classmethod
     def actualizar_numero(cls, idtipo, numeracion):
-        
         try:
             with transaction.atomic():
                 parametro = cls.objects.select_for_update().get(idtipo=idtipo)
@@ -30,10 +29,8 @@ class Parametros(models.Model):
                 parametro.save()
             return True
         except (Parametros.DoesNotExist, ValidationError) as e:
-            # Puedes loggear el error si es necesario
             return False
         except Exception as e:
-            # Captura cualquier otro error inesperado
             return False
         
     def __str__(self):
